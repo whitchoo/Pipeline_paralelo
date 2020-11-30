@@ -1,0 +1,81 @@
+pipeline{
+    agent any
+    environment{
+        NextStep = '1stCalc'
+    }
+    stages{
+        stage('1stCalc'){
+            steps{
+				While ($NextStep!='1stCalc'){
+					//Esperamos a que finalice el Stage anterior.
+				}
+                build job:'(PARALELOS) taskCalcExecution'
+                echo 'Cálculo ejecutado correctamente....'
+                echo 'mejoras pendientes: sacar alguna info del resultado de la ejecución '
+				$NextStep = '1stExtract'
+            }
+        }
+        stage('1stExtract'){
+            steps{
+				While ($NextStep!='1stExtract'){
+					//Esperamos a que finalice el Stage anterior.
+				}
+                echo '1stExtract'
+				$NextStep='packInstallation'
+            }
+        }
+        stage('packInstallation'){
+            steps{
+				While ($NextStep!='packInstallation'){
+					//Esperamos a que finalice el Stage anterior.
+				}
+                build job:'(PARALELOS) packsInstallation'
+                echo 'Se han instalados todos los paquetes'
+                echo 'mejoras pendientes: colocar log de paquetes instalados y alguna cosa mas.... '
+				$NextStep='2ndCalc'
+            }
+        }
+        stage('2ndCalc'){
+            steps{
+				While ($NextStep!='2ndCalc'){
+					//Esperamos a que finalice el Stage anterior.
+				}
+                echo 'reiniciamos richweb y limpiamos caches... '
+                //build job:'(MX_CL) Rich AUXILIAR - 40005'
+                build job:'(PARALELOS) taskCalcExecution'
+                echo 'Cálculo ejecutado correctamente....'
+                echo 'mejoras pendientes: sacar alguna info del resultado de la ejecución '
+				$NextStep='2ndExtract'
+            }
+        }
+        
+        stage('2ndExtract'){
+            steps{
+				While ($NextStep!='2ndExtract'){
+					//Esperamos a que finalice el Stage anterior.
+				}
+                echo '1stExtract'
+				$NextStep='exeComparison'
+            }
+        }
+        stage('exeComparison'){
+            steps{
+				While ($NextStep!='exeComparison'){
+					//Esperamos a que finalice el Stage anterior.
+				}
+                echo '1stExtract'
+				$NextStep='publishResults'
+            }
+        }
+        stage('publishResults'){
+            steps{
+				While ($NextStep!='publishResults'){
+					//Esperamos a que finalice el Stage anterior.
+				}
+                echo '1stExtract'
+				$NextStep='***Fin***'
+            }
+        }
+    }
+    
+}
